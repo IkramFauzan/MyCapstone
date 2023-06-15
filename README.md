@@ -1,2 +1,2 @@
 # MyCapstone
-Gak Tau Lah Capek
+Mulut bergetar lidah bergoyang
