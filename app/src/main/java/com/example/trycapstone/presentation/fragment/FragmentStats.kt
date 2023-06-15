@@ -30,8 +30,7 @@ class FragmentStats : Fragment() {
 
     private lateinit var binding: FragmentStatsBinding
     private lateinit var firebaseAuth: FirebaseAuth
-    //private lateinit var adapter: StatsAdapter
-    private lateinit var adapter: FakeAdapter
+    private lateinit var adapter: StatsAdapter
     private lateinit var viewModel: PriceViewModel
 
     override fun onCreateView(
@@ -48,12 +47,11 @@ class FragmentStats : Fragment() {
 
         viewModel = ViewModelProvider(this)[PriceViewModel::class.java]
 
-        //adapter = StatsAdapter()
-        adapter = FakeAdapter()
+        adapter = StatsAdapter()
         binding.usersrecyclerview.adapter = adapter
         binding.usersrecyclerview.layoutManager = LinearLayoutManager(requireActivity())
 
-        viewModel.priceList.observe(requireActivity()) {cabai ->
+        viewModel.listPrice.observe(requireActivity()) {cabai ->
             if (cabai != null) {
                 adapter.setData(cabai)
             }
@@ -73,13 +71,25 @@ class FragmentStats : Fragment() {
 
         val adapter = ArrayAdapter(requireActivity(), R.layout.list_province, provinces)
 
+        val search = ArrayAdapter(requireActivity(), R.layout.list_search, provinces)
+
         binding.autoComplete.setAdapter(adapter)
+
+        binding.autoCompleteTextViewSearch.setAdapter(search)
+
+        binding
 
         binding.autoComplete.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
             val itemSelected = adapterView.getItemAtPosition(i) as String
             Toast.makeText(requireActivity(), "Anda memilih: $itemSelected", Toast.LENGTH_SHORT).show()
 
             viewModel.getPrice(itemSelected)
+        }
+
+        binding.autoCompleteTextViewSearch.setOnItemClickListener { parent, view, position, id ->
+            val selectedProvinsi = parent.getItemAtPosition(position).toString()
+            Toast.makeText(requireActivity(), "Anda memilih: $selectedProvinsi", Toast.LENGTH_SHORT).show()
+
         }
 
         viewModel.listPrice.observe(requireActivity() ) { priceData ->

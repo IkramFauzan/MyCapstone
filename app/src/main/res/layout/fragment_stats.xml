@@ -5,6 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <AutoCompleteTextView
+        android:id="@+id/autoCompleteTextViewSearch"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:hint="Cari provinsi"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="340dp"
@@ -47,6 +57,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/province"
             android:inputType="none" />
+
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.recyclerview.widget.RecyclerView

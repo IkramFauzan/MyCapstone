@@ -22,4 +22,6 @@ interface ApiService {
         @Query("provinsi") provinsi: String
     ): Call<CabaiResponse>
 
+
+
 }

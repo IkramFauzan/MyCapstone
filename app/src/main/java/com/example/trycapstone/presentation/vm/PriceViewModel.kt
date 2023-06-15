@@ -28,18 +28,18 @@ class PriceViewModel: ViewModel() {
 
     fun getPrice(provinsi: String) {
         Log.e("PriceViewModel", "Success")
-        val client = RetrofitClient.getApiService().getProvince(provinsi)
-        client.enqueue(object : Callback<ResponseNewItem> {
-            override fun onResponse(call: Call<ResponseNewItem>, response: Response<ResponseNewItem>) {
+        val client = RetrofitClient.getApiService().getResponse(provinsi)
+        client.enqueue(object : Callback<CabaiResponse> {
+            override fun onResponse(call: Call<CabaiResponse>, response: Response<CabaiResponse>) {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
-                    _priceList.value = responseBody?.data as List<DataItem>?
+                    _listPrice.value = responseBody?.data
                 } else {
                     Log.e("PriceViewModel", "Failed")
                 }
             }
 
-            override fun onFailure(call: Call<ResponseNewItem>, t: Throwable) {
+            override fun onFailure(call: Call<CabaiResponse>, t: Throwable) {
                 Log.e("PriceViewModel", "Error: ${t.message}")
             }
         })
