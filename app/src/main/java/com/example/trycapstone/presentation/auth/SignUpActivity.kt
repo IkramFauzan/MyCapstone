@@ -13,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import com.example.trycapstone.MainActivity
 import com.example.trycapstone.R
 import com.example.trycapstone.User
 import com.example.trycapstone.databinding.ActivitySignUpBinding
@@ -112,7 +113,7 @@ class SignUpActivity : AppCompatActivity() {
                     val userData = User(email, username, password)
                     userDocRef.set(userData).addOnSuccessListener {
                         Toast.makeText(this, "Register success", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, FragmentHome::class.java)
+                        val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
                     } .addOnFailureListener {
                         Toast.makeText(this, "${it.message}", Toast.LENGTH_SHORT).show()

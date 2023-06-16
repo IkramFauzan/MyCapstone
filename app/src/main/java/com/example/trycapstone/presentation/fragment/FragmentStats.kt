@@ -1,37 +1,34 @@
 package com.example.trycapstone.presentation.fragment
 
-import android.content.Intent
+import android.app.SearchManager
+import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.trycapstone.R
-import com.example.trycapstone.data.ApiService
-import com.example.trycapstone.data.FakeAdapter
-import com.example.trycapstone.data.Price
-import com.example.trycapstone.data.StatsAdapter
-import com.example.trycapstone.presentation.auth.SignInActivity
+import com.example.trycapstone.data.*
 import com.example.trycapstone.databinding.FragmentStatsBinding
-import com.example.trycapstone.presentation.vm.CabaiViewModel
 import com.example.trycapstone.presentation.vm.PriceViewModel
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.google.firebase.auth.FirebaseAuth
 
+@Suppress("DEPRECATION")
 class FragmentStats : Fragment() {
 
     private lateinit var binding: FragmentStatsBinding
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var adapter: StatsAdapter
     private lateinit var viewModel: PriceViewModel
+    private lateinit var provinsi: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,63 +44,53 @@ class FragmentStats : Fragment() {
 
         viewModel = ViewModelProvider(this)[PriceViewModel::class.java]
 
-        adapter = StatsAdapter()
-        binding.usersrecyclerview.adapter = adapter
-        binding.usersrecyclerview.layoutManager = LinearLayoutManager(requireActivity())
-
-        viewModel.listPrice.observe(requireActivity()) {cabai ->
-            if (cabai != null) {
-                adapter.setData(cabai)
-            }
-        }
-
-        val provinces = listOf(
-            "ACEH", "BALI", "BANTEN", "BENGKULU", "DI YOGYAKARTA", "DKI JAKARTA",
-            "GORONTALO", "JAMBI", "JAWA BARAT", "JAWA TENGAH", "JAWA TIMUR",
-            "KALIMANTAN BARAT", "KALIMANTAN SELATAN", "KALIMANTAN TENGAH",
-            "KALIMANTAN TIMUR", "KALIMANTAN UTARA", "KEPULAUAN BANGKA BELITUNG",
-            "KEPULAUAN RIAU", "LAMPUNG", "MALUKU", "MALUKU UTARA", "NUSA TENGGARA BARAT",
-            "NUSA TENGGARA TIMUR", "PAPUA", "PAPUA BARAT", "RIAU", "SULAWESI BARAT",
-            "SULAWESI SELATAN", "SULAWESI TENGAH", "SULAWESI TENGGARA", "SULAWESI UTARA",
-            "SUMATERA BARAT", "SUMATERA SELATAN", "SUMATERA UTARA", "KALIMANTAN SELATAN",
-            "SUMATERA SELATAN", "SUMATERA UTARA"
-        )
-
-        val adapter = ArrayAdapter(requireActivity(), R.layout.list_province, provinces)
-
-        val search = ArrayAdapter(requireActivity(), R.layout.list_search, provinces)
-
-        binding.autoComplete.setAdapter(adapter)
-
-        binding.autoCompleteTextViewSearch.setAdapter(search)
-
-        binding
-
-        binding.autoComplete.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-            val itemSelected = adapterView.getItemAtPosition(i) as String
-            Toast.makeText(requireActivity(), "Anda memilih: $itemSelected", Toast.LENGTH_SHORT).show()
-
-            viewModel.getPrice(itemSelected)
-        }
-
-        binding.autoCompleteTextViewSearch.setOnItemClickListener { parent, view, position, id ->
-            val selectedProvinsi = parent.getItemAtPosition(position).toString()
-            Toast.makeText(requireActivity(), "Anda memilih: $selectedProvinsi", Toast.LENGTH_SHORT).show()
-
-        }
-
-        viewModel.listPrice.observe(requireActivity() ) { priceData ->
-            val sB = StringBuilder()
-            for (price in priceData) {
-                sB.append("Date: ${price.monthYear}, Price: ${price.price}\n")
-            }
-
+        viewModel.dataCabai.observe(requireActivity()) {cabai ->
+            setUserData(cabai)
         }
 
         firebaseAuth = FirebaseAuth.getInstance()
 
         showChart()
+        setUpSearchView()
 
+    }
+
+    private fun setUserData(userList: List<Price>) {
+        val listUser = ArrayList<Price>()
+        for (u in userList) {
+            listUser.clear()
+            listUser.addAll(userList)
+        }
+        val adapter = StatsAdapter(listUser)
+        binding.usersrecyclerview.adapter = adapter
+
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_action, menu)
+        return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun setUpSearchView()  {
+        val searchManager = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = binding.svUser
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
+        searchView.queryHint = resources.getString(R.string.province)
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                Log.e("Terserah", "onQueryTextSubmit()")
+                viewModel.pencarianUser(query)
+                searchView.clearFocus()
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
     }
 
     private fun showChart() {

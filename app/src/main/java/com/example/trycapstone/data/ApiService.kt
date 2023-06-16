@@ -7,21 +7,25 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("harga")
+    @GET("harga/{provinsi}")
     fun getResponse(
-        @Query("provinsi") provinsi: String
+        @Path("provinsi") provinsi: String?
     ): Call<CabaiResponse>
 
-    @GET("harga")
+    @GET("search")
     fun getProvince(
-        @Query("provinsi") provinsi: String
-    ): Call<ResponseNewItem>
+        @Query("q") provinsi: String?
+    ): Call<PriceData>
 
     @GET("data")
     fun getGraphic(
-        @Query("provinsi") provinsi: String
+        @Query("provinsi") provinsi: String?
     ): Call<CabaiResponse>
 
+    @GET("harga/{provinsi}")
+    fun getProv(
+        @Path("provinsi") provinsi: String?
+    ): Call<PriceData>
 
 
 }
