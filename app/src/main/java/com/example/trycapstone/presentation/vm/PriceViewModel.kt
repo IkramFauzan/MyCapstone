@@ -52,7 +52,7 @@ class PriceViewModel: ViewModel() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        _dataCabai.value = response.body()?.Price
+                        _dataCabai.postValue(response.body()?.prices)
                     }
                 } else {
                     Log.e("PriceViewModel", "Failed")
@@ -77,7 +77,7 @@ class PriceViewModel: ViewModel() {
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody != null) {
-                        _dataCabai.value = response.body()?.Price
+                        _dataCabai.postValue(response.body()?.prices)
                     }
                 } else {
                     Log.e("Terserah", "Muncul error baris 69")

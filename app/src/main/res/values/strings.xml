@@ -35,7 +35,7 @@
     <string name="beranda">Home</string>
     <string name="profile">Profile</string>
     <string name="graph">Graph</string>
-    <string name="welcome">Welcome !</string>
+    <string name="welcome">Selamat datang di RICH!</string>
     <string name="news">HOT News</string>
     <string name="user">User</string>
     <string name="profile_name">Name</string>
@@ -48,4 +48,7 @@
     <string name="date">Mei 2023</string>
     <string name="stats_predict">Prediksi komoditas harga cabai</string>
     <string name="province">Provinsi</string>
+    <string name="home">Home</string>
+    <string name="bar">Bar</string>
+    <string name="scanHealth">Scan Kesehatan Cabai</string>
 </resources>

@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.trycapstone.R
 import com.example.trycapstone.data.*
 import com.example.trycapstone.databinding.FragmentStatsBinding
@@ -44,14 +45,24 @@ class FragmentStats : Fragment() {
 
         viewModel = ViewModelProvider(this)[PriceViewModel::class.java]
 
-        viewModel.dataCabai.observe(requireActivity()) {cabai ->
-            setUserData(cabai)
+        viewModel.dataCabai.observe(requireActivity()) {
+            setUserData(it)
         }
+
+        val searchView = binding.svUser
+        binding.svUser.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                viewModel.pencarianUser(query)
+                searchView.clearFocus()
+                return true
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return false
+            }
+        })
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        showChart()
-        setUpSearchView()
 
     }
 
@@ -63,51 +74,8 @@ class FragmentStats : Fragment() {
         }
         val adapter = StatsAdapter(listUser)
         binding.usersrecyclerview.adapter = adapter
+        binding.usersrecyclerview.layoutManager = LinearLayoutManager(requireActivity())
 
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_action, menu)
-        return super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    private fun setUpSearchView()  {
-        val searchManager = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchView = binding.svUser
-
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
-        searchView.queryHint = resources.getString(R.string.province)
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                Log.e("Terserah", "onQueryTextSubmit()")
-                viewModel.pencarianUser(query)
-                searchView.clearFocus()
-
-                return true
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return false
-            }
-        })
-    }
-
-    private fun showChart() {
-        val entries = arrayListOf<Entry>()
-        entries.add(Entry(1f, 50f))
-        entries.add(Entry(2f, 70f))
-        entries.add(Entry(3f, 60f))
-        entries.add(Entry(4f, 80f))
-        entries.add(Entry(5f, 75f))
-
-        val dataSet = LineDataSet(entries, "Data Set")
-        dataSet.color = Color.RED
-        dataSet.valueTextColor = Color.BLACK
-
-        val lineData = LineData(dataSet)
-        binding.chart.data = lineData
-        binding.chart.invalidate()
-        binding.chart.animateY(2000)
-    }
 }

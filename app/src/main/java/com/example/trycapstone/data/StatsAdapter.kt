@@ -15,8 +15,8 @@ class StatsAdapter(private val statsList: List<Price>) : RecyclerView.Adapter<St
     }
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val statsList = statsList[position]
-        holder.binding.dateTextView.text = statsList.Date
-        holder.binding.priceTextView.text = statsList.Value
+        holder.binding.dateTextView.text = statsList.category
+        holder.binding.priceTextView.text = statsList.price
     }
     override fun getItemCount() = statsList.size
 

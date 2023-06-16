@@ -2,13 +2,20 @@ package com.example.trycapstone.presentation.vm
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.trycapstone.Repo
 import com.example.trycapstone.User
+import com.example.trycapstone.data.Price
+import com.example.trycapstone.data.PriceData
+import com.example.trycapstone.data.RetrofitClient
 import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.ByteArrayOutputStream
 
 class ProfileViewModel: ViewModel() {
@@ -21,6 +28,9 @@ class ProfileViewModel: ViewModel() {
 
     private val _error = MutableLiveData<Exception>()
     val error: LiveData<Exception> = _error
+
+    private val _dataCabai = MutableLiveData<List<Price>>()
+    val dataCabai: LiveData<List<Price>> = _dataCabai
 
     init{
         getProfile()
@@ -67,6 +77,51 @@ class ProfileViewModel: ViewModel() {
             }
         }
 
+    }
+
+    fun getPrice(provinsi: String) {
+        Log.e("PriceViewModel", "Success")
+        val client = RetrofitClient.getApiService().getProv(provinsi)
+        client.enqueue(object : Callback<PriceData> {
+            override fun onResponse(call: Call<PriceData>, response: Response<PriceData>) {
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        _dataCabai.postValue(response.body()?.prices)
+                    }
+                } else {
+                    Log.e("PriceViewModel", "Failed")
+                }
+            }
+
+            override fun onFailure(call: Call<PriceData>, t: Throwable) {
+                Log.e("PriceViewModel", "Error: ${t.message}")
+            }
+        })
+    }
+
+    fun pencarianUser(query: String) {
+        val client = RetrofitClient.getApiService().getProvince(query)
+        client.enqueue(object : Callback<PriceData> {
+            override fun onResponse(
+                call: Call<PriceData>,
+                response: Response<PriceData>
+            ) {
+                val responseBody = response.body()
+                Log.e("Terserah", responseBody.toString())
+                if (response.isSuccessful) {
+                    val responseBody = response.body()
+                    if (responseBody != null) {
+                        _dataCabai.postValue(response.body()?.prices)
+                    }
+                } else {
+                    Log.e("Terserah", "Muncul error baris 69")
+                }
+            }
+            override fun onFailure(call: Call<PriceData>, t: Throwable) {
+                print("Muncul Eror: " + t.message)
+            }
+        })
     }
 
 }

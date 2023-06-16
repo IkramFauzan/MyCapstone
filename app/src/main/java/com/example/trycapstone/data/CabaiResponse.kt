@@ -25,26 +25,18 @@ data class Cabai(
 
 @Parcelize
 data class PriceData(
-	@field:SerializedName("No.")
-	val No: Int,
-	@field:SerializedName("Provinsi")
-	val Provinsi: String,
-	@field:SerializedName("Start_date")
-	val Start_date: String,
-	@field:SerializedName("End_date")
-	val End_date: String,
-	@field:SerializedName("Price_date")
-	val Predict_date: String,
-	@field:SerializedName("Price")
-	val Price: List<Price>
+	@field:SerializedName("province")
+	val province: String,
+	@field:SerializedName("prices")
+	val prices: List<Price>
 ): Parcelable
 
 @Parcelize
 data class Price(
-	@field:SerializedName("Date")
-	val Date: String,
-	@field:SerializedName("Value")
-	val Value: String
+	@field:SerializedName("category")
+	val category: String,
+	@field:SerializedName("price")
+	val price: String
 ): Parcelable
 
 @Parcelize
