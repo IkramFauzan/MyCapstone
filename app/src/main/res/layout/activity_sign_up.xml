@@ -14,6 +14,7 @@
         android:layout_height="144dp"
         android:src="@drawable/rich"
         app:civ_border_color="@color/red"
+        app:civ_circle_background_color="@color/yellow"
         app:layout_constraintBottom_toTopOf="@id/guidelineHorizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

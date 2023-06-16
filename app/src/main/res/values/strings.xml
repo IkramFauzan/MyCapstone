@@ -4,7 +4,7 @@
     <string name="login">Login</string>
     <string name="predict_app">Aplikasi Prediksi Harga Cabai</string>
     <string name="title_login_page">Silahkan masukkan data diri Anda</string>
-    <string name="title_signup_page">Complete your personal data below</string>
+    <string name="title_signup_page">Silahkan lengkapi data Anda</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="profile_email">Email</string>
